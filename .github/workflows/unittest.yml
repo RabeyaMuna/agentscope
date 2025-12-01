@@ -1,6 +1,6 @@
 name: Python Unittest Coverage
 
-on: [push, pull_request]
+on: push
 
 jobs:
   test:
@@ -29,5 +29,5 @@ jobs:
       run: |
         coverage run -m pytest tests
     - name: Generate coverage report
-      run: |
+      run: |-
         coverage report -m
