@@ -4,7 +4,6 @@ on: push
 
 jobs:
   test:
-    if: false == contains(github.event.pull_request.title, 'WIP')
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
