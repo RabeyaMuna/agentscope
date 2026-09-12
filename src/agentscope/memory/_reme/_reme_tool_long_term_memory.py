@@ -8,12 +8,13 @@ tool usage guidelines.
 Requirements:
     Python 3.12 or greater is required to use ReMe.
 """
+
 from typing import Any
 
-from ._reme_long_term_memory_base import ReMeLongTermMemoryBase
 from ..._logging import logger
 from ...message import Msg, TextBlock
 from ...tool import ToolResponse
+from ._reme_long_term_memory_base import ReMeLongTermMemoryBase
 
 
 class ReMeToolLongTermMemory(ReMeLongTermMemoryBase):
@@ -479,7 +480,7 @@ class ReMeToolLongTermMemory(ReMeLongTermMemoryBase):
         self,
         msg: Msg | list[Msg] | None,
         **kwargs: Any,
-    ) -> str:
+    ) -> Any:
         """Retrieve tool guidelines from memory.
 
         Retrieve tool guidelines from memory based on message content.
@@ -492,8 +493,8 @@ class ReMeToolLongTermMemory(ReMeLongTermMemoryBase):
                 Additional keyword arguments.
 
         Returns:
-            `str`:
-                The retrieved tool guidelines as a string.
+            `Any`:
+                The retrieved tool guidelines or result from the memory retrieval.
         """
         if msg is None:
             return ""
@@ -501,9 +502,7 @@ class ReMeToolLongTermMemory(ReMeLongTermMemoryBase):
         if isinstance(msg, Msg):
             msg = [msg]
 
-        if not isinstance(msg, list) or not all(
-            isinstance(_, Msg) for _ in msg
-        ):
+        if not isinstance(msg, list) or not all(isinstance(_, Msg) for _ in msg):
             raise TypeError(
                 "The input message must be a Msg or a list of Msg objects.",
             )
