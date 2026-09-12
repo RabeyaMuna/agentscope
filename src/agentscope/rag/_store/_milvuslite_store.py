@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """The Milvus Lite vector store implementation."""
-import json
-from typing import Any, Literal, TYPE_CHECKING
 
-from .._reader import Document
-from ._store_base import VDBStoreBase
-from .._document import DocMetadata
+import json
+from typing import TYPE_CHECKING, Any, Literal
 
 from ..._utils._common import _map_text_to_uuid
 from ...types import Embedding
+from .._document import DocMetadata
+from .._reader import Document
+from ._store_base import VDBStoreBase
 
 if TYPE_CHECKING:
     from pymilvus import MilvusClient
@@ -61,6 +61,14 @@ class MilvusLiteStore(VDBStoreBase):
 
         try:
             from pymilvus import MilvusClient
+
+            try:
+                # ConnectionConfigException may be raised when milvus_lite is missing
+                from pymilvus.exceptions import (
+                    ConnectionConfigException,  # type: ignore
+                )
+            except Exception:
+                ConnectionConfigException = None
         except ImportError as e:
             raise ImportError(
                 "Milvus client is not installed. Please install it with "
@@ -74,7 +82,24 @@ class MilvusLiteStore(VDBStoreBase):
         if token:
             init_params["token"] = token
 
-        self._client = MilvusClient(**init_params)
+        try:
+            self._client = MilvusClient(**init_params)
+        except ModuleNotFoundError as e:
+            # When creating a local MilvusLite client, pymilvus may try to import
+            # the optional milvus_lite package which might be missing.
+            raise ImportError(
+                "milvus-lite is required for local database connections; install milvus_lite"
+            ) from e
+        except Exception as e:
+            # If pymilvus raises a ConnectionConfigException indicating missing
+            # local dependency, surface a clearer ImportError.
+            if "ConnectionConfigException" in type(e).__name__ or (
+                "milvus_lite" in str(e)
+            ):
+                raise ImportError(
+                    "milvus-lite is required for local database connections; install milvus_lite"
+                ) from e
+            raise
 
         self.collection_name = collection_name
         self.dimensions = dimensions
@@ -189,10 +214,7 @@ class MilvusLiteStore(VDBStoreBase):
         for hits in results:
             for hit in hits:
                 # Check score threshold
-                if (
-                    score_threshold is not None
-                    and hit["distance"] < score_threshold
-                ):
+                if score_threshold is not None and hit["distance"] < score_threshold:
                     continue
 
                 # Get metadata from entity

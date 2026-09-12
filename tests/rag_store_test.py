@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 """Test the RAG store implementations."""
+
 import os
 from unittest import IsolatedAsyncioTestCase
 
 from agentscope.message import TextBlock
 from agentscope.rag import (
-    QdrantStore,
-    Document,
     DocMetadata,
+    Document,
     MilvusLiteStore,
+    QdrantStore,
 )
 
 
@@ -75,6 +76,10 @@ class RAGStoreTest(IsolatedAsyncioTestCase):
 
     async def test_milvus_lite_store(self) -> None:
         """Test the MilvusLiteStore implementation."""
+        import pytest
+
+        pytest.importorskip("milvus_lite")
+
         store = MilvusLiteStore(
             uri="./milvus_demo.db",
             collection_name="test_milvus",
