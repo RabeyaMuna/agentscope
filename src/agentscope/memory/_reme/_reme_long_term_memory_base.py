@@ -68,10 +68,10 @@ Example:
             )
 
 """
+
 from abc import ABCMeta
 from typing import Any
 
-from .._long_term_memory_base import LongTermMemoryBase
 from ...embedding import (
     DashScopeTextEmbedding,
     OpenAITextEmbedding,
@@ -80,6 +80,7 @@ from ...model import (
     DashScopeChatModel,
     OpenAIChatModel,
 )
+from .._long_term_memory_base import LongTermMemoryBase
 
 
 class ReMeLongTermMemoryBase(LongTermMemoryBase, metaclass=ABCMeta):
@@ -108,9 +109,7 @@ class ReMeLongTermMemoryBase(LongTermMemoryBase, metaclass=ABCMeta):
         user_name: str | None = None,
         run_name: str | None = None,
         model: DashScopeChatModel | OpenAIChatModel | None = None,
-        embedding_model: (
-            DashScopeTextEmbedding | OpenAITextEmbedding | None
-        ) = None,
+        embedding_model: (DashScopeTextEmbedding | OpenAITextEmbedding | None) = None,
         reme_config_path: str | None = None,
         **kwargs: Any,
     ) -> None:
@@ -232,9 +231,7 @@ class ReMeLongTermMemoryBase(LongTermMemoryBase, metaclass=ABCMeta):
         # Similar to LLM, DashScope uses fixed endpoint,
         # OpenAI can be customized
         if isinstance(embedding_model, DashScopeTextEmbedding):
-            embedding_api_base = (
-                "https://dashscope.aliyuncs.com/compatible-mode/v1"
-            )
+            embedding_api_base = "https://dashscope.aliyuncs.com/compatible-mode/v1"
             embedding_api_key = embedding_model.api_key
 
         elif isinstance(embedding_model, OpenAITextEmbedding):
@@ -266,9 +263,8 @@ class ReMeLongTermMemoryBase(LongTermMemoryBase, metaclass=ABCMeta):
             )
 
         embedding_dimensions = embedding_model.dimensions
-        config_args.append(
-            f"embedding_model.default.params={{\"dimensions\": {embedding_dimensions}}}"
-        )
+        params = '{{"dimensions": {}}}'.format(embedding_dimensions)
+        config_args.append("embedding_model.default.params=" + params)
 
         # Attempt to import and initialize ReMe
         # If import fails, set app to None and issue a warning
