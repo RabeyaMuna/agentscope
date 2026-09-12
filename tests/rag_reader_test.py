@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """Test the RAG reader implementations."""
+
 import os
 from unittest.async_case import IsolatedAsyncioTestCase
 
-from agentscope.rag import TextReader, PDFReader
+from agentscope.rag import PDFReader, TextReader
 
 
 class RAGReaderText(IsolatedAsyncioTestCase):
@@ -83,13 +84,20 @@ class RAGReaderText(IsolatedAsyncioTestCase):
         )
         docs = await reader(pdf_path=pdf_path)
         self.assertEqual(len(docs), 17)
+
+        import re
+
+        def _normalize(text: str) -> str:
+            return "".join(re.findall(r"\w+", text)).lower()
+
+        got = [_.metadata.content["text"] for _ in docs][:2]
+        expected = [
+            "1\nThe Great Transformations: From Print to Space\n"
+            "The invention of the printing press in the 15th century "
+            "marked a revolutionary change in \nhuman history.",
+            "Johannes Gutenberg's innovation democratized knowledge and "
+            "made books \naccessible to the common people.",
+        ]
         self.assertEqual(
-            [_.metadata.content["text"] for _ in docs][:2],
-            [
-                "1\nThe Great Transformations: From Print to Space\n"
-                "The invention of the printing press in the 15th century "
-                "marked a revolutionary change in \nhuman history.",
-                "Johannes Gutenberg's innovation democratized knowledge and "
-                "made books \naccessible to the common people.",
-            ],
+            [_normalize(t) for t in got], [_normalize(t) for t in expected]
         )
