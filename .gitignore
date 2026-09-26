@@ -136,3 +136,8 @@ dmypy.json
 # docs
 docs/tutorial/en/build/
 docs/tutorial/zh_CN/build/
+# Shell redirection artifacts
+=[0-9]*
+>[0-9]*
+*.tmp
+*.log
