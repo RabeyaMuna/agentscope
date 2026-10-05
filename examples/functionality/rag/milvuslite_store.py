@@ -10,11 +10,11 @@ src_path = Path(__file__).resolve().parent.parent.parent.parent / "src"
 if str(src_path) not in sys.path:
     sys.path.insert(0, str(src_path))
 
-from agentscope.rag import MilvusLiteStore, Document, DocMetadata
 from agentscope.message import TextBlock
+from agentscope.rag import DocMetadata, Document, MilvusLiteStore
 
 
-async def example_basic_operations():
+async def example_basic_operations() -> None:
     """The example of basic CRUD operations with MilvusLiteStore."""
     print("\n" + "=" * 60)
     print("Test 1: Basic CRUD Operations")
@@ -103,7 +103,7 @@ async def example_basic_operations():
     print(f"\n✓ Got MilvusClient: {type(client).__name__}")
 
 
-async def example_filter_search():
+async def example_filter_search() -> None:
     """The example of search with metadata filtering."""
     print("\n" + "=" * 60)
     print("Test 2: Search with Metadata Filtering")
@@ -175,7 +175,9 @@ async def example_filter_search():
         limit=4,
         filter='doc_id like "prog%"',
     )
-    print(f"\n✓ Search with filter (doc_id like 'prog%'): {len(prog_results)} results")
+    print(
+        f"\n✓ Search with filter (doc_id like 'prog%'): {len(prog_results)} results"
+    )
     for i, result in enumerate(prog_results, 1):
         print(f"  {i}. Doc ID: {result.metadata.doc_id}, Score: {result.score:.4f}")
 
@@ -185,12 +187,14 @@ async def example_filter_search():
         limit=4,
         filter='doc_id like "ai%"',
     )
-    print(f"\n✓ Search with filter (doc_id like 'ai%'): {len(ai_results)} results")
+    print(
+        f"\n✓ Search with filter (doc_id like 'ai%'): {len(ai_results)} results"
+    )
     for i, result in enumerate(ai_results, 1):
         print(f"  {i}. Doc ID: {result.metadata.doc_id}, Score: {result.score:.4f}")
 
 
-async def example_multiple_chunks():
+async def example_multiple_chunks() -> None:
     """The example of documents with multiple chunks."""
     print("\n" + "=" * 60)
     print("Test 3: Documents with Multiple Chunks")
@@ -251,7 +255,7 @@ async def example_multiple_chunks():
         print(f"     Score: {result.score:.4f}")
 
 
-async def example_distance_metrics():
+async def example_distance_metrics() -> None:
     """The example of different distance metrics."""
     print("\n" + "=" * 60)
     print("Test 4: Different Distance Metrics")
@@ -259,7 +263,7 @@ async def example_distance_metrics():
 
     # Test with different metrics
     metrics = ["COSINE", "L2", "IP"]
-    
+
     for metric in metrics:
         print(f"\n--- Testing {metric} metric ---")
         store = MilvusLiteStore(
@@ -290,7 +294,7 @@ async def example_distance_metrics():
         print(f"✓ {metric} metric: Score = {results[0].score:.4f}")
 
 
-async def main():
+async def main() -> None:
     """Run all example."""
     print("\n" + "=" * 60)
     print("MilvusLiteStore Comprehensive Test Suite")
