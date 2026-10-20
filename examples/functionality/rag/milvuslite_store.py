@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """Example of using MilvusLiteStore in AgentScope RAG system."""
+
 import asyncio
 import sys
 from pathlib import Path
-from typing import List
 
 # Add the src directory to sys.path to import from local development code
 src_path = Path(__file__).resolve().parent.parent.parent.parent / "src"
@@ -244,7 +244,7 @@ async def example_multiple_chunks():
         limit=3,
     )
 
-    print(f"\n✓ Search results for multi-chunk document:")
+    print("\n✓ Search results for multi-chunk document:")
     for i, result in enumerate(results, 1):
         print(f"  {i}. Chunk {result.metadata.chunk_id}/{result.metadata.total_chunks}")
         print(f"     Content: {result.metadata.content}")
@@ -259,7 +259,7 @@ async def example_distance_metrics():
 
     # Test with different metrics
     metrics = ["COSINE", "L2", "IP"]
-    
+
     for metric in metrics:
         print(f"\n--- Testing {metric} metric ---")
         store = MilvusLiteStore(
@@ -286,7 +286,7 @@ async def example_distance_metrics():
             query_embedding=[0.1, 0.2, 0.3, 0.4],
             limit=1,
         )
-        
+
         print(f"✓ {metric} metric: Score = {results[0].score:.4f}")
 
 
@@ -309,6 +309,7 @@ async def main():
     except Exception as e:
         print(f"\n✗ Test failed with error: {e}")
         import traceback
+
         traceback.print_exc()
 
 

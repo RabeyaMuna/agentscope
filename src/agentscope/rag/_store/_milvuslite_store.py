@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 """The Milvus Lite vector store implementation."""
-import json
+
 from typing import Any, Literal, TYPE_CHECKING
 
 from .._reader import Document
 from ._store_base import VDBStoreBase
 from .._document import DocMetadata
-from ..._utils._common import _map_text_to_uuid
 from ...types import Embedding
 
 if TYPE_CHECKING:
@@ -67,12 +66,12 @@ class MilvusLiteStore(VDBStoreBase):
             ) from e
 
         client_kwargs = client_kwargs or {}
-        
+
         # Initialize MilvusClient with uri and optional token
         init_params = {"uri": uri, **client_kwargs}
         if token is not None:
             init_params["token"] = token
-            
+
         self._client = MilvusClient(**init_params)
 
         self.collection_name = collection_name
@@ -109,8 +108,8 @@ class MilvusLiteStore(VDBStoreBase):
             # Generate a unique integer ID based on hash
             # Use hash of doc_id + chunk_id to create a stable integer ID
             id_str = f"{doc.metadata.doc_id}_{doc.metadata.chunk_id}"
-            unique_id = abs(hash(id_str)) % (10 ** 10)  # Keep it within reasonable range
-            
+            unique_id = abs(hash(id_str)) % (10**10)  # Keep it within reasonable range
+
             # Prepare data entry with vector and metadata
             entry = {
                 "id": unique_id,
@@ -178,7 +177,7 @@ class MilvusLiteStore(VDBStoreBase):
                 # Get metadata from entity
                 entity = hit["entity"]
                 from ...message import TextBlock
-                
+
                 doc_metadata = DocMetadata(
                     content=TextBlock(text=entity.get("content", "")),
                     doc_id=entity.get("doc_id", ""),
