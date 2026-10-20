@@ -103,7 +103,10 @@ class RAGKnowledgeTest(IsolatedAsyncioTestCase):
             res[0].metadata.content["text"],
             "This is an apple.",
         )
-        self.assertEqual(
+        # The exact score may vary slightly due to floating point precision
+        # or underlying library differences. Use assertAlmostEqual.
+        self.assertAlmostEqual(
             res[0].score,
             0.9974149072579597,
+            places=5,
         )

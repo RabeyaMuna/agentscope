@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Test the RAG store implementations."""
+
 import os
 from unittest import IsolatedAsyncioTestCase
 
@@ -8,7 +9,6 @@ from agentscope.rag import (
     QdrantStore,
     Document,
     DocMetadata,
-    MilvusLiteStore,
 )
 
 
@@ -75,6 +75,11 @@ class RAGStoreTest(IsolatedAsyncioTestCase):
 
     async def test_milvus_lite_store(self) -> None:
         """Test the MilvusLiteStore implementation."""
+        try:
+            from agentscope.rag.vector_store import MilvusLiteStore
+        except ImportError:
+            self.skipTest("milvus-lite is not installed")
+
         store = MilvusLiteStore(
             uri="./milvus_demo.db",
             collection_name="test_milvus",

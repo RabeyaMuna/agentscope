@@ -74,7 +74,17 @@ class MilvusLiteStore(VDBStoreBase):
         if token:
             init_params["token"] = token
 
-        self._client = MilvusClient(**init_params)
+        try:
+            self._client = MilvusClient(**init_params)
+        except Exception as e:
+            if "milvus_lite" in str(e).lower():
+                raise ImportError(
+                    "Milvus Lite submodule is not available. Ensure you have "
+                    "installed the optional dependency with "
+                    "`pip install pymilvus[milvus_lite]`."
+                ) from e
+            else:
+                raise
 
         self.collection_name = collection_name
         self.dimensions = dimensions
