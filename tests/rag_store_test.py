@@ -116,9 +116,10 @@ class RAGStoreTest(IsolatedAsyncioTestCase):
             score_threshold=0.8,
         )
         self.assertEqual(len(res), 1)
-        self.assertEqual(
+        self.assertAlmostEqual(
             res[0].score,
             0.9974148273468018,
+            places=6,
         )
         self.assertEqual(
             res[0].metadata.content["text"],

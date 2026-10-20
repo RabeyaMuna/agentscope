@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Test the RAG knowledge implementations."""
+
 from typing import Any
 from unittest.async_case import IsolatedAsyncioTestCase
 
@@ -16,7 +17,7 @@ from agentscope.rag import (
 )
 
 
-class TestTextEmbedding(EmbeddingModelBase):
+class MockTextEmbedding(EmbeddingModelBase):
     """A mock text embedding model for testing."""
 
     supported_modalities: list[str] = ["text"]
