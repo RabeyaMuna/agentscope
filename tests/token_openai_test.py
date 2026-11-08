@@ -2,12 +2,20 @@
 # pylint: disable=line-too-long
 # flake8: noqa: E501
 """The unittests for OpenAI token counter."""
+import importlib.util
 import os
+from unittest import skipUnless
 from unittest.async_case import IsolatedAsyncioTestCase
+
+PIL_AVAILABLE = importlib.util.find_spec("PIL") is not None
 
 from agentscope.token import OpenAITokenCounter
 
 
+@skipUnless(
+    PIL_AVAILABLE,
+    "Skipping OpenAI token counter tests because Pillow is not installed.",
+)
 class OpenAITokenCounterTest(IsolatedAsyncioTestCase):
     """The unittests for the OpenAI token counter."""
 

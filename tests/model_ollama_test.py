@@ -1,9 +1,16 @@
 # -*- coding: utf-8 -*-
 """Unit tests for Ollama API model class."""
 from typing import AsyncGenerator, Any
+from unittest import skipUnless
 from unittest.async_case import IsolatedAsyncioTestCase
 from unittest.mock import patch, AsyncMock
 from pydantic import BaseModel
+
+try:
+    import ollama  # noqa: F401
+    OLLAMA_AVAILABLE = True
+except ImportError:
+    OLLAMA_AVAILABLE = False
 
 from agentscope.model import OllamaChatModel, ChatResponse
 from agentscope.message import TextBlock, ToolUseBlock, ThinkingBlock
@@ -74,6 +81,10 @@ class SampleModel(BaseModel):
     age: int
 
 
+@skipUnless(
+    OLLAMA_AVAILABLE,
+    "Skipping Ollama model tests because ollama is not installed.",
+)
 class TestOllamaChatModel(IsolatedAsyncioTestCase):
     """Test cases for OllamaChatModel."""
 

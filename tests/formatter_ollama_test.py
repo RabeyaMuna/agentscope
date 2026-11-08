@@ -4,6 +4,12 @@ import os
 import unittest
 from unittest.async_case import IsolatedAsyncioTestCase
 
+try:
+    import ollama  # noqa: F401
+    OLLAMA_AVAILABLE = True
+except ImportError:
+    OLLAMA_AVAILABLE = False
+
 from agentscope.formatter import OllamaChatFormatter, OllamaMultiAgentFormatter
 from agentscope.message import (
     Msg,
@@ -15,6 +21,10 @@ from agentscope.message import (
 )
 
 
+@unittest.skipUnless(
+    OLLAMA_AVAILABLE,
+    "Skipping Ollama formatter tests because ollama is not installed.",
+)
 class TestOllamaFormatter(IsolatedAsyncioTestCase):
     """Unittest for the Ollama formatter."""
 

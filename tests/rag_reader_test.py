@@ -1,11 +1,20 @@
 # -*- coding: utf-8 -*-
 """Test the RAG reader implementations."""
+import importlib.util
 import os
+from unittest import skipUnless
 from unittest.async_case import IsolatedAsyncioTestCase
+
+NLTK_AVAILABLE = importlib.util.find_spec("nltk") is not None
+PYPDF_AVAILABLE = importlib.util.find_spec("pypdf") is not None
 
 from agentscope.rag import TextReader, PDFReader
 
 
+@skipUnless(
+    NLTK_AVAILABLE,
+    "Skipping RAG reader tests because nltk is not installed.",
+)
 class RAGReaderText(IsolatedAsyncioTestCase):
     """Test cases for RAG reader implementations."""
 

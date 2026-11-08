@@ -172,11 +172,11 @@ def _extract_json_schema_from_mcp_tool(tool: Tool) -> dict[str, Any]:
             "description": tool.description,
             "parameters": {
                 "type": "object",
-                "properties": tool.inputSchema.get(
+                "properties": tool.input_schema.get(
                     "properties",
                     {},
                 ),
-                "required": tool.inputSchema.get(
+                "required": tool.input_schema.get(
                     "required",
                     [],
                 ),

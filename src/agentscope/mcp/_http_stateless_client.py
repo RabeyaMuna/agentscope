@@ -3,10 +3,12 @@
 from contextlib import _AsyncGeneratorContextManager
 from typing import Any, Callable, Awaitable, Literal, List
 
+import httpx2
 import mcp.types
 from mcp import ClientSession
 from mcp.client.sse import sse_client
-from mcp.client.streamable_http import streamablehttp_client
+from mcp.shared._httpx_utils import create_mcp_http_client
+from mcp.client.streamable_http import streamable_http_client as streamablehttp_client
 
 from . import MCPToolFunction
 from ._client_base import MCPClientBase
@@ -82,7 +84,17 @@ class HttpStatelessClient(MCPClientBase):
             return sse_client(**self.client_config)
 
         if self.transport == "streamable_http":
-            return streamablehttp_client(**self.client_config)
+            http_client = create_mcp_http_client(
+                headers=self.client_config.get("headers", {}),
+                timeout=httpx2.Timeout(
+                    self.client_config.get("timeout", 30),
+                    read=self.client_config.get("sse_read_timeout", 300),
+                ),
+            )
+            return streamablehttp_client(
+                url=self.client_config["url"],
+                http_client=http_client,
+            )
 
         raise ValueError(
             f"Unsupported transport type: {self.transport}. "

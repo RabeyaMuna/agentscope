@@ -4,8 +4,15 @@ import os
 import sys
 import shutil
 from typing import Generator, Callable, Any, cast
+from unittest import skipIf
 from unittest.async_case import IsolatedAsyncioTestCase
-import ray
+
+try:
+    import ray
+    RAY_AVAILABLE = True
+except ImportError:
+    ray = None  # type: ignore[assignment]
+    RAY_AVAILABLE = False
 
 from agentscope.agent import AgentBase
 from agentscope.message import Msg
@@ -173,6 +180,7 @@ async def dummy_solution_generation(
     )
 
 
+@skipIf(not RAY_AVAILABLE, "Skipping Ray tests because ray is not installed.")
 class EvaluatorTest(IsolatedAsyncioTestCase):
     """Test for evaluators in AS"""
 

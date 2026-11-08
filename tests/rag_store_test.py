@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Test the RAG store implementations."""
 import os
+import shutil
 from unittest import IsolatedAsyncioTestCase
 
 from agentscope.message import TextBlock
@@ -17,12 +18,23 @@ class RAGStoreTest(IsolatedAsyncioTestCase):
 
     async def asyncSetUp(self) -> None:
         """Set up before each test."""
-        # Remove the test database file after the test
+        # Remove the test database path before running tests.
         if os.path.exists("./milvus_demo.db"):
-            os.remove("./milvus_demo.db")
+            if os.path.isdir("./milvus_demo.db"):
+                shutil.rmtree("./milvus_demo.db")
+            else:
+                os.remove("./milvus_demo.db")
 
     async def test_qdrant_store(self) -> None:
         """Test the QdrantStore implementation."""
+        try:
+            import qdrant_client  # noqa: F401
+        except ImportError:
+            self.skipTest(
+                "Skipping QdrantStore test because qdrant-client is not installed. "
+                "Install it with `pip install qdrant-client` to enable this test."
+            )
+
         store = QdrantStore(
             location=":memory:",
             collection_name="test",
@@ -75,6 +87,15 @@ class RAGStoreTest(IsolatedAsyncioTestCase):
 
     async def test_milvus_lite_store(self) -> None:
         """Test the MilvusLiteStore implementation."""
+        try:
+            import pymilvus  # noqa: F401
+            import milvus_lite  # noqa: F401
+        except ImportError as e:
+            self.skipTest(
+                "Skipping MilvusLiteStore test because pymilvus[milvus_lite] is not installed. "
+                "Install it with `pip install pymilvus[milvus_lite]` to enable this test."
+            )
+
         store = MilvusLiteStore(
             uri="./milvus_demo.db",
             collection_name="test_milvus",
@@ -127,6 +148,9 @@ class RAGStoreTest(IsolatedAsyncioTestCase):
 
     async def asyncTearDown(self) -> None:
         """Clean up after tests."""
-        # Remove Milvus Lite database file
+        # Remove Milvus Lite database path
         if os.path.exists("./milvus_demo.db"):
-            os.remove("./milvus_demo.db")
+            if os.path.isdir("./milvus_demo.db"):
+                shutil.rmtree("./milvus_demo.db")
+            else:
+                os.remove("./milvus_demo.db")

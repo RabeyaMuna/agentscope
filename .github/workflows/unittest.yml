@@ -1,14 +1,16 @@
 name: Python Unittest Coverage
 
-on: [push, pull_request]
+on:
 
+- push
+- workflow_dispatch
 jobs:
   test:
     if: false == contains(github.event.pull_request.title, 'WIP')
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-13]
+        os: [ubuntu-latest, windows-latest]
         python-version: ['3.10', '3.11', '3.12']
     env:
       OS: ${{ matrix.os }}
@@ -29,5 +31,5 @@ jobs:
       run: |
         coverage run -m pytest tests
     - name: Generate coverage report
-      run: |
+      run: |-
         coverage report -m

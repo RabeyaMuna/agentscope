@@ -1,9 +1,23 @@
 # -*- coding: utf-8 -*-
 """Unit tests for OpenAI tools"""
 
+import importlib.util
 import base64
+import sys
+import types
 from io import BytesIO
+from unittest import skipUnless
 from unittest.mock import Mock, patch, mock_open, MagicMock
+
+PIL_AVAILABLE = importlib.util.find_spec("PIL") is not None
+
+
+def _make_fake_pil_modules() -> dict[str, types.ModuleType]:
+    pil = types.ModuleType("PIL")
+    pil_image = types.ModuleType("PIL.Image")
+    pil.Image = pil_image
+    pil_image.open = Mock()
+    return {"PIL": pil, "PIL.Image": pil_image}
 
 from agentscope.message import ImageBlock, TextBlock, AudioBlock
 from agentscope.tool import ToolResponse
@@ -136,6 +150,10 @@ class TestOpenAITextToImage:
         ]
 
 
+@skipUnless(
+    PIL_AVAILABLE,
+    "Skipping OpenAI edit image tests because Pillow is not installed.",
+)
 class TestOpenAIEditImage:
     """Test cases for openai_edit_image function"""
 

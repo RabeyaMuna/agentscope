@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 """Unit tests for Google Gemini API model class."""
+import importlib.util
 from typing import AsyncGenerator
+from unittest import skipUnless
 from unittest.async_case import IsolatedAsyncioTestCase
 from unittest.mock import Mock, patch, AsyncMock
 from pydantic import BaseModel
+
+GEMINI_AVAILABLE = importlib.util.find_spec("google.genai") is not None
 
 from agentscope.model import GeminiChatModel, ChatResponse
 from agentscope.message import TextBlock, ToolUseBlock, ThinkingBlock
@@ -65,6 +69,10 @@ class SampleModel(BaseModel):
     age: int
 
 
+@skipUnless(
+    GEMINI_AVAILABLE,
+    "Skipping Gemini model tests because google-genai is not installed.",
+)
 class TestGeminiChatModel(IsolatedAsyncioTestCase):
     """Test cases for GeminiChatModel."""
 

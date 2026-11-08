@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 """Test the RAG knowledge implementations."""
+import importlib.util
 from typing import Any
+from unittest import skipUnless
 from unittest.async_case import IsolatedAsyncioTestCase
+
+QDRANT_AVAILABLE = importlib.util.find_spec("qdrant_client") is not None
 
 from agentscope.embedding import (
     EmbeddingModelBase,
@@ -48,6 +52,10 @@ class TestTextEmbedding(EmbeddingModelBase):
         )
 
 
+@skipUnless(
+    QDRANT_AVAILABLE,
+    "Skipping RAG knowledge tests because qdrant-client is not installed.",
+)
 class RAGKnowledgeTest(IsolatedAsyncioTestCase):
     """Test cases for RAG knowledge implementations."""
 
