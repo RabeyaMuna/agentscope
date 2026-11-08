@@ -3,18 +3,21 @@
 import asyncio
 import sys
 from pathlib import Path
-from typing import List
 
 # Add the src directory to sys.path to import from local development code
 src_path = Path(__file__).resolve().parent.parent.parent.parent / "src"
 if str(src_path) not in sys.path:
     sys.path.insert(0, str(src_path))
 
-from agentscope.rag import MilvusLiteStore, Document, DocMetadata
-from agentscope.message import TextBlock
+from agentscope.message import TextBlock  # noqa: E402 pylint: disable=C0413
+from agentscope.rag import (  # noqa: E402 pylint: disable=C0413
+    DocMetadata,
+    Document,
+    MilvusLiteStore,
+)
 
 
-async def example_basic_operations():
+async def example_basic_operations() -> None:
     """The example of basic CRUD operations with MilvusLiteStore."""
     print("\n" + "=" * 60)
     print("Test 1: Basic CRUD Operations")
@@ -34,7 +37,9 @@ async def example_basic_operations():
     test_docs = [
         Document(
             metadata=DocMetadata(
-                content=TextBlock(text="Artificial Intelligence is the future"),
+                content=TextBlock(
+                    text="Artificial Intelligence is the future",
+                ),
                 doc_id="doc_1",
                 chunk_id=0,
                 total_chunks=1,
@@ -103,7 +108,7 @@ async def example_basic_operations():
     print(f"\n✓ Got MilvusClient: {type(client).__name__}")
 
 
-async def example_filter_search():
+async def example_filter_search() -> None:
     """The example of search with metadata filtering."""
     print("\n" + "=" * 60)
     print("Test 2: Search with Metadata Filtering")
@@ -129,7 +134,9 @@ async def example_filter_search():
         ),
         Document(
             metadata=DocMetadata(
-                content=TextBlock(text="Java is used for enterprise applications"),
+                content=TextBlock(
+                    text="Java is used for enterprise applications",
+                ),
                 doc_id="prog_2",
                 chunk_id=0,
                 total_chunks=1,
@@ -167,7 +174,10 @@ async def example_filter_search():
     )
     print(f"\n✓ Search without filter: {len(all_results)} results")
     for i, result in enumerate(all_results, 1):
-        print(f"  {i}. Doc ID: {result.metadata.doc_id}, Score: {result.score:.4f}")
+        print(
+            f"  {i}. Doc ID: {result.metadata.doc_id}, "
+            f"Score: {result.score:.4f}",
+        )
 
     # Search with filter for programming docs
     prog_results = await store.search(
@@ -175,9 +185,15 @@ async def example_filter_search():
         limit=4,
         filter='doc_id like "prog%"',
     )
-    print(f"\n✓ Search with filter (doc_id like 'prog%'): {len(prog_results)} results")
+    print(
+        f"\n✓ Search with filter (doc_id like 'prog%'): "
+        f"{len(prog_results)} results",
+    )
     for i, result in enumerate(prog_results, 1):
-        print(f"  {i}. Doc ID: {result.metadata.doc_id}, Score: {result.score:.4f}")
+        print(
+            f"  {i}. Doc ID: {result.metadata.doc_id}, "
+            f"Score: {result.score:.4f}",
+        )
 
     # Search with filter for AI docs
     ai_results = await store.search(
@@ -185,12 +201,18 @@ async def example_filter_search():
         limit=4,
         filter='doc_id like "ai%"',
     )
-    print(f"\n✓ Search with filter (doc_id like 'ai%'): {len(ai_results)} results")
+    print(
+        f"\n✓ Search with filter (doc_id like 'ai%'): "
+        f"{len(ai_results)} results",
+    )
     for i, result in enumerate(ai_results, 1):
-        print(f"  {i}. Doc ID: {result.metadata.doc_id}, Score: {result.score:.4f}")
+        print(
+            f"  {i}. Doc ID: {result.metadata.doc_id}, "
+            f"Score: {result.score:.4f}",
+        )
 
 
-async def example_multiple_chunks():
+async def example_multiple_chunks() -> None:
     """The example of documents with multiple chunks."""
     print("\n" + "=" * 60)
     print("Test 3: Documents with Multiple Chunks")
@@ -244,14 +266,21 @@ async def example_multiple_chunks():
         limit=3,
     )
 
-    print(f"\n✓ Search results for multi-chunk document:")
+    print("\n✓ Search results for multi-chunk document:")
     for i, result in enumerate(results, 1):
-        print(f"  {i}. Chunk {result.metadata.chunk_id}/{result.metadata.total_chunks}")
-        print(f"     Content: {result.metadata.content}")
-        print(f"     Score: {result.score:.4f}")
+        print(
+            f"  {i}. Chunk {result.metadata.chunk_id}/"
+            f"{result.metadata.total_chunks}",
+        )
+        print(
+            f"     Content: {result.metadata.content}",
+        )
+        print(
+            f"     Score: {result.score:.4f}",
+        )
 
 
-async def example_distance_metrics():
+async def example_distance_metrics() -> None:
     """The example of different distance metrics."""
     print("\n" + "=" * 60)
     print("Test 4: Different Distance Metrics")
@@ -259,7 +288,7 @@ async def example_distance_metrics():
 
     # Test with different metrics
     metrics = ["COSINE", "L2", "IP"]
-    
+
     for metric in metrics:
         print(f"\n--- Testing {metric} metric ---")
         store = MilvusLiteStore(
@@ -286,11 +315,11 @@ async def example_distance_metrics():
             query_embedding=[0.1, 0.2, 0.3, 0.4],
             limit=1,
         )
-        
+
         print(f"✓ {metric} metric: Score = {results[0].score:.4f}")
 
 
-async def main():
+async def main() -> None:
     """Run all example."""
     print("\n" + "=" * 60)
     print("MilvusLiteStore Comprehensive Test Suite")
@@ -309,6 +338,7 @@ async def main():
     except Exception as e:
         print(f"\n✗ Test failed with error: {e}")
         import traceback
+
         traceback.print_exc()
 
 
