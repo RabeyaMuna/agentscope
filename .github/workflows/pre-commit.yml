@@ -1,12 +1,12 @@
 name: Pre-commit
 
-on: [push, pull_request]
+on: push
 
 jobs:
   run:
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: True
+      fail-fast: true
       matrix:
         os: [ubuntu-latest]
     env:
