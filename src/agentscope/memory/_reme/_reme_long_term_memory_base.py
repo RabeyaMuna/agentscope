@@ -68,6 +68,7 @@ Example:
             )
 
 """
+
 from abc import ABCMeta
 from typing import Any
 
@@ -266,8 +267,9 @@ class ReMeLongTermMemoryBase(LongTermMemoryBase, metaclass=ABCMeta):
             )
 
         embedding_dimensions = embedding_model.dimensions
+        params = f'{{"dimensions": {embedding_dimensions}}}'
         config_args.append(
-            f"embedding_model.default.params={{\"dimensions\": {embedding_dimensions}}}"
+            f"embedding_model.default.params={params}",
         )
 
         # Attempt to import and initialize ReMe
