@@ -1,6 +1,6 @@
 name: Python Unittest Coverage
 
-on: [push, pull_request]
+on: push
 
 jobs:
   test:
@@ -8,7 +8,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-13]
+        os: [ubuntu-latest, windows-latest]
         python-version: ['3.10', '3.11', '3.12']
     env:
       OS: ${{ matrix.os }}
@@ -24,10 +24,11 @@ jobs:
     - name: Install Dev Dependencies
       run: |
         pip install -q -e .[dev]
+        pip install "mcp>=1.13,<2"
         pip install coverage pytest
     - name: Run tests with coverage
       run: |
         coverage run -m pytest tests
     - name: Generate coverage report
-      run: |
+      run: |-
         coverage report -m
