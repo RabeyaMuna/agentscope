@@ -141,4 +141,8 @@ docs/tutorial/zh_CN/build/
 docs/tutorial/**/doctrees/
 docs/tutorial/**/.doctrees/
 *.buildinfo
-*.pickle
+*.pickle# Shell redirection artifacts
+=[0-9]*
+>[0-9]*
+*.tmp
+*.log
