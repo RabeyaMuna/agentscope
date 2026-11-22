@@ -14,6 +14,7 @@ from agentscope.rag import (
     Document,
     DocMetadata,
 )
+from mcp.client.streamable_http import streamablehttp_client
 
 
 class TestTextEmbedding(EmbeddingModelBase):

@@ -10,6 +10,7 @@ from agentscope.rag import (
     DocMetadata,
     MilvusLiteStore,
 )
+from mcp.client.streamable_http import streamablehttp_client
 
 
 class RAGStoreTest(IsolatedAsyncioTestCase):

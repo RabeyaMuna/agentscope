@@ -11,6 +11,7 @@ from agentscope.message import Msg
 from agentscope.model import DashScopeChatModel
 from agentscope.session import JSONSession
 from agentscope.tool import Toolkit
+from mcp.client.streamable_http import streamablehttp_client
 
 
 class MyAgent(AgentBase):
