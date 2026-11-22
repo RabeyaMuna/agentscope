@@ -67,12 +67,12 @@ class MilvusLiteStore(VDBStoreBase):
             ) from e
 
         client_kwargs = client_kwargs or {}
-        
+
         # Initialize MilvusClient with uri and optional token
         init_params = {"uri": uri, **client_kwargs}
         if token is not None:
             init_params["token"] = token
-            
+
         self._client = MilvusClient(**init_params)
 
         self.collection_name = collection_name
